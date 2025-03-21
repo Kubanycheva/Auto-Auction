@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,10 +42,23 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'auction_app',
+    'rest_framework.authtoken',
     "phonenumber_field",
     'rest_framework_swagger',  # Swagger
-    'drf_yasg'
+    'drf_yasg',
+    'auction_app',
+
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+
+    'rest_auth',
+    'rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +69,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -111,15 +127,24 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Bishkek'
+
+USE_L10N = True
 
 USE_I18N = True
 
 USE_TZ = True
 
+LANGUAGES = (
+    ('en', 'English'),
+    ('ru', 'Russian'),
+)
 
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
+
+MODELTRANSLATION_LANGUAGES = ('en', 'ru')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -135,3 +160,27 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'auction_app.UserProfile'
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=17),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True

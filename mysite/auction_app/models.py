@@ -12,6 +12,7 @@ class UserProfile(AbstractUser):
         ('Покупатель', 'Buyer'),
     )
     user_role = models.CharField(max_length=32, choices=ROLE_CHOICES, default='Administrator')
+    image = models.ImageField(upload_to='user_image', null=True, blank=True)
 
     def __str__(self):
         return f'{self.first_name} - {self.last_name}'
@@ -20,22 +21,13 @@ class UserProfile(AbstractUser):
 class Category(models.Model):
     category_name = models.CharField(max_length=32, unique=True)
 
-    def __str__(self):
-        return self.category_name
-
 
 class Brand(models.Model):
     brand_name = models.CharField(max_length=32, null=True, blank=True)
 
-    def __str__(self):
-        return self.brand_name
-
 
 class Model(models.Model):
     model_name = models.CharField(max_length=32, null=True, blank=True)
-
-    def __str__(self):
-        return self.model_name
 
 
 class Car(models.Model):
@@ -50,12 +42,10 @@ class Car(models.Model):
     price = models.PositiveSmallIntegerField()
     description = models.TextField()
     seller = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, blank=True, related_name='seller_user')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True, related_name='category_car')
     brand = models.ForeignKey(Model, on_delete=models.CASCADE, null=True, blank=True, related_name='brand')
     model = models.ForeignKey(Brand, on_delete=models.CASCADE, null=True, blank=True, related_name='model')
-
-    def __str__(self):
-        return f'{self.model} - {self.brand}'
+    images = models.ImageField(upload_to='car_image', null=True, blank=True)
 
 
 class Image(models.Model):
