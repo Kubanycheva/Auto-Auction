@@ -1,10 +1,17 @@
 from django.shortcuts import render
 from rest_framework import status, viewsets, generics
+from rest_framework.pagination import PageNumberPagination
+
 from .serializers import *
 from .models import *
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from .pagination import AuctionPagination
+from .filters import CarFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 class RegisterView(generics.CreateAPIView):
@@ -42,10 +49,12 @@ class LogoutView(generics.GenericAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
+    def get_queryset(self):
+        return UserProfile.objects.filter(id=self.request.user.id)
 
 
 class CategoryListApiVIew(generics.ListAPIView):
@@ -68,9 +77,19 @@ class ModelViewSet(viewsets.ModelViewSet):
     serializer_class = ModelSerializer
 
 
+class CarListApiViewPagination(PageNumberPagination):
+    page_size = 2
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
+
+
 class CarListApiView(generics.ListAPIView):
     queryset = Car.objects.all()
     serializer_class = CarListSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = CarFilter
+    search_fields = ['task']
+    ordering_fields = ['price', 'year']
 
 
 class CarDetailApiView(generics.RetrieveAPIView):
@@ -83,19 +102,30 @@ class ImageViewSet(viewsets.ModelViewSet):
     serializer_class = ImageSerializer
 
 
-class AuctionViewSet(viewsets.ModelViewSet):
+class AuctionListApiVIew(generics.ListAPIView):
     queryset = Auction.objects.all()
     serializer_class = AuctionSerializer
+    pagination_class = AuctionPagination
 
 
-class BidViewSet(viewsets.ModelViewSet):
+class BidListApiView(generics.ListAPIView):
     queryset = Bid.objects.all()
     serializer_class = BidSerializer
 
 
-class FeedBackViewSet(viewsets.ModelViewSet):
+class FeedBackListCreateAPIView(generics.ListCreateAPIView):
     queryset = FeedBack.objects.all()
     serializer_class = FeedBackSerializer
+
+
+class FavoriteViewSet(viewsets.ModelViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+
+
+class FavoriteMovieViewSet(viewsets.ModelViewSet):
+    queryset = FavoriteCar.objects.all()
+    serializer_class = FavoriteMovieSerializer
 
 
 

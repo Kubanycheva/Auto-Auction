@@ -73,7 +73,7 @@ class CarListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Car
-        fields = ['id', 'model', 'year', 'fuel_type', 'images', 'mileage', 'price', 'transmission']
+        fields = ['task', 'id', 'model', 'year', 'fuel_type', 'images', 'mileage', 'price', 'transmission']
 
 
 class CarDetailSerializer(serializers.ModelSerializer):
@@ -84,7 +84,7 @@ class CarDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Car
-        fields = ['model', 'year', 'fuel_type', 'images', 'mileage', 'price', 'transmission', 'description', 'seller', 'category',
+        fields = ['task', 'model', 'year', 'fuel_type', 'images', 'mileage', 'price', 'transmission', 'description', 'seller', 'category',
                   'brand', 'model']
 
 
@@ -103,18 +103,40 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class AuctionSerializer(serializers.ModelSerializer):
+    car = CarListSerializer(read_only=True)
+
     class Meta:
         model = Auction
         fields = '__all__'
 
 
 class BidSerializer(serializers.ModelSerializer):
+    auction = AuctionSerializer(read_only=True)
+    buyer = UserProfileSimpleSerializer(read_only=True)
+
     class Meta:
         model = Bid
         fields = '__all__'
 
 
 class FeedBackSerializer(serializers.ModelSerializer):
+    seller = UserProfileSimpleSerializer(read_only=True)
+    buyer = UserProfileSimpleSerializer(read_only=True)
+
     class Meta:
         model = FeedBack
+        fields = '__all__'
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    created_date = serializers.DateField(format='%d-%m-%Y')
+
+    class Meta:
+        model = Favorite
+        fields = ['user', 'created_date',]
+
+
+class FavoriteMovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FavoriteCar
         fields = '__all__'

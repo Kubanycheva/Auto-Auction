@@ -7,9 +7,11 @@ router.register(r'user_profile', UserProfileViewSet)
 router.register(r'brand', BrandViewSet)
 router.register(r'model', ModelViewSet)
 router.register(r'image', ImageViewSet)
-router.register(r'auction', AuctionViewSet)
-router.register(r'bid', BidViewSet)
-router.register(r'feed_back', FeedBackViewSet)
+router.register(r'favorite', FavoriteViewSet, basename='favorite-list')
+router.register(r'favorite-detail', FavoriteViewSet, basename='favorite-detail')
+
+router.register(r'favorite_movie', FavoriteMovieViewSet, basename='favorite_movie-list')
+router.register(r'favorite_movie-detail', FavoriteMovieViewSet, basename='favorite_movie-detail')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -23,6 +25,10 @@ urlpatterns = [
     path('categories/<int:pk>/', CategoryDetailAPIView.as_view(), name='categories_detail'),
 
     path('car/', CarListApiView.as_view(), name='car_list'),
-    path('car/<int:pk>/', CarDetailApiView.as_view(), name='car_detail')
+    path('car/<int:pk>/', CarDetailApiView.as_view(), name='car_detail'),
+
+    path('auction', AuctionListApiVIew.as_view(), name='auctions'),
+    path('bid', BidListApiView.as_view(), name='bids'),
+    path('feedback', FeedBackListCreateAPIView.as_view(), name='feedbacks')
 
 ]

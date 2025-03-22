@@ -19,7 +19,7 @@ class ModelTranslationOptions(TranslationOptions):
 
 @register(Car)
 class CarTranslationOptions(TranslationOptions):
-    fields = ('description',)
+    fields = ('description', 'task',)
 
 
 

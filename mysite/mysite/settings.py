@@ -47,18 +47,20 @@ INSTALLED_APPS = [
     'rest_framework_swagger',  # Swagger
     'drf_yasg',
     'auction_app',
-
+    'django_filters',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+
+    'dj_rest_auth',
     'allauth',
     'allauth.account',
+    'dj_rest_auth.registration',
     'allauth.socialaccount',
-
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
 
-    'rest_auth',
-    'rest_auth.registration',
+
+
 ]
 
 MIDDLEWARE = [
@@ -172,7 +174,11 @@ SIMPLE_JWT = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 2,
+
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 AUTHENTICATION_BACKENDS = [

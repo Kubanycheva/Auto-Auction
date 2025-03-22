@@ -37,6 +37,8 @@ urlpatterns = i18n_patterns(
     path('admin/', admin.site.urls),
     path('', include('auction_app.urls')),
     path('accounts/', include('allauth.urls')),
+    path('auth/', include('dj_rest_auth.urls')),
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui')
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
