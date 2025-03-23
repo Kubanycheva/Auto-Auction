@@ -4,14 +4,12 @@ from rest_framework import routers
 
 router = routers.SimpleRouter()
 router.register(r'user_profile', UserProfileViewSet)
-router.register(r'brand', BrandViewSet)
-router.register(r'model', ModelViewSet)
 router.register(r'image', ImageViewSet)
 router.register(r'favorite', FavoriteViewSet, basename='favorite-list')
 router.register(r'favorite-detail', FavoriteViewSet, basename='favorite-detail')
 
-router.register(r'favorite_movie', FavoriteMovieViewSet, basename='favorite_movie-list')
-router.register(r'favorite_movie-detail', FavoriteMovieViewSet, basename='favorite_movie-detail')
+router.register(r'favorite_car', FavoriteMovieViewSet, basename='favorite_movie-list')
+router.register(r'favorite_car-detail', FavoriteMovieViewSet, basename='favorite_movie-detail')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -29,6 +27,8 @@ urlpatterns = [
 
     path('auction', AuctionListApiVIew.as_view(), name='auctions'),
     path('bid', BidListApiView.as_view(), name='bids'),
-    path('feedback', FeedBackListCreateAPIView.as_view(), name='feedbacks')
+    path('feedback', FeedBackListCreateAPIView.as_view(), name='feedbacks'),
+    path('brand', BrandListApiView.as_view(), name='brands'),
+    path('model', ModelListAPiView.as_view(), name='models')
 
 ]

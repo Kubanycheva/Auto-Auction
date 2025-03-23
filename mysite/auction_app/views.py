@@ -25,7 +25,7 @@ class RegisterView(generics.CreateAPIView):
 
 
 class CustomLoginView(TokenObtainPairView):
-    serializer_class = LoginSerializer
+    serializer_class = CustomLoginSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -67,12 +67,12 @@ class CategoryDetailAPIView(generics.RetrieveAPIView):
     serializer_class = CategoryDetailSerializer
 
 
-class BrandViewSet(viewsets.ModelViewSet):
+class BrandListApiView(generics.ListAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
 
 
-class ModelViewSet(viewsets.ModelViewSet):
+class ModelListAPiView(generics.ListAPIView):
     queryset = Model.objects.all()
     serializer_class = ModelSerializer
 
